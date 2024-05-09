@@ -39,27 +39,37 @@ export default function Login({ setLoggedIn }){
 
         const users = ["ukpono", "brandon", "covenant"]
 
-        function handleSubmit(event){
+        function handleSubmit(event){  
             event.preventDefault();
-            if(users.includes(username)){
-                setsuccess("Successfully login")
-                localStorage.setItem("token", 'xNTU2MDo-hoeaMZY3g');
-                setLoggedIn(true);
-                navigate("/dashboard");
-            }else{
-                setError("Username not found")
-            }
+            // if(users.includes(username)){
+            //     setsuccess("Successfully login")
+            //     localStorage.setItem("token", 'xNTU2MDo-hoeaMZY3g');
+            //     setLoggedIn(true);
+            //     navigate("/dashboard");
+            // }else{
+            //     setError("Username not found")
+            // }
 
-            // axios.post('http://localhost:5000/login/', {
-            //     username: username,
-            //     password: password
-            //   })
-            //   .then(function (response) {
-            //     setsuccess("login succesfully");
-            //   })
-            //   .catch(function (error) {
-            //     setError("an error occured..");
-            //   });
+            axios.post('http://localhost:5000/login/', {
+                username: username,
+                password: password
+              })
+              .then(function (response) {
+                const statuscode = response.status
+                if (statuscode == 200){
+                    console.log("Response from backend:", statuscode)
+                    localStorage.setItem("token", response.data.token)
+                    setLoggedIn(true);
+                    setsuccess("login succesfully");
+                    navigate("/dashboard");
+                }
+                else{
+                    console.log("Username or password doesn't macth")
+                }
+              })
+              .catch(function (error) {
+                setError("an error occured..");
+              });
 
         }
         function handleUsername(event){
